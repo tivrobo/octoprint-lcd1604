@@ -100,7 +100,7 @@ class OctoPrintLcd1604(octoprint.plugin.StartupPlugin,
         lcd.write_string(remaining)
 
         # progress bar
-        percent = int(progress/5) + 1
+        percent = int(progress / 5)
         completed = '\x01' * percent
 
         self._logger.info("percent: " + str(percent))
