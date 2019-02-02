@@ -63,6 +63,7 @@ class OctoPrintLcd1604(octoprint.plugin.StartupPlugin,
 
         if progress == 1:
             self.start_date = time.time()
+            remaining = 'calculating...'
 
         if progress > 5 and progress < 100:
             now = time.time()
