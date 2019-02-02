@@ -61,8 +61,6 @@ class OctoPrintLcd1604(octoprint.plugin.StartupPlugin,
         lcd.cursor_pos = (1, 0)
         lcd.write_string('ETA:')
 
-        remaining = 'calculating...'
-
         if progress == 1:
             self.start_date = time.time()
 
@@ -72,13 +70,15 @@ class OctoPrintLcd1604(octoprint.plugin.StartupPlugin,
             average = elapsed / (progress - 1)
             remaining = int((100 - progress) * average)
             remaining = str(datetime.timedelta(seconds=remaining))
-            
-            self._logger.info("remaining: " + remaining)
-            self._logger.info("len(remaining): " + str(len(remaining)))
-            self._logger.info("int(cols - len(remaining)): " + str(int(cols - len(remaining))))
-            
-            lcd.cursor_pos = (1, int(cols - len(remaining)))
-            lcd.write_string(remaining)
+        else:
+            remaining = 'calculating...'
+
+        self._logger.info("remaining: " + remaining)
+        self._logger.info("len(remaining): " + str(len(remaining)))
+        self._logger.info("int(cols - len(remaining)): " + str(int(cols - len(remaining))))
+
+        lcd.cursor_pos = (1, int(cols - len(remaining)))
+        lcd.write_string(remaining)
 
         # progress bar
         percent = int(progress/5) + 1
