@@ -20,10 +20,6 @@ class OctoPrintLcd1604(octoprint.plugin.StartupPlugin,
                            auto_linebreaks=False,
                            backlight_enabled=True)
 
-        self.lcd.cursor_pos = (4, 0)
-        self.lcd.write_string('C: ' + str(self.lcd.__getattribute__('cols')))
-        self.lcd.write_string('R: ' + str(self.lcd.__getattribute__('rows')))
-
         # init vars
         self.start_date = 0
         self.block = bytearray(b'\xFF\xFF\xFF\xFF\xFF\xFF\xFF')
@@ -41,14 +37,14 @@ class OctoPrintLcd1604(octoprint.plugin.StartupPlugin,
 
         # reset lcd
         lcd.clear()
+        
         lcd.cursor_pos = (0, 0)
-
-        lcd.write_string('Completed: ' + str(progress) + '%\r\n')
+        lcd.write_string('Completed: ' + str(progress) + '%')
 
         percent = int(progress / 5) + 1
         completed = '\x01' * percent
-        # lcd.cursor_pos = (1, 0)
-        lcd.write_string(completed + '\r\n')
+        lcd.cursor_pos = (3, 0)
+        lcd.write_string(completed)
 
         if progress == 1:
             self.start_date = time.time()
@@ -59,8 +55,8 @@ class OctoPrintLcd1604(octoprint.plugin.StartupPlugin,
             average = elapsed / (progress - 1)
             remaining = int((100 - progress) * average)
             remaining = str(datetime.timedelta(seconds=remaining))
-            # lcd.cursor_pos = (2, 0)
-            lcd.write_string('ETA: ' + remaining + '\r\n')
+            lcd.cursor_pos = (1, 0)
+            lcd.write_string('ETA: ' + remaining)
 
     def get_update_information(self):
         return dict(
