@@ -17,7 +17,7 @@ class OctoPrintLcd1604(octoprint.plugin.StartupPlugin,
         # init vars
         self.start_date = 0
 
-        self.block = bytearray(b'\xFF\xFF\xFF\xFF\xFF\xFF\xFF').append(255)
+        self.block = bytearray(b'\xFF\xFF\xFF\xFF\xFF\xFF\xFF')
         self.block.append(255)
 
         self.cols = 20
