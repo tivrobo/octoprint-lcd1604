@@ -50,7 +50,7 @@ class OctoPrintLcd1604(octoprint.plugin.StartupPlugin,
         lcd.write_string(str_completed)
 
         if len(str_progress) > 0:
-            lcd.cursor_pos = (0, self.cols - len(str_progress))
+            lcd.cursor_pos = (0, (self.cols - len(str_progress)))
             lcd.write_string(str_progress)
 
         lcd.cursor_pos = (1, 0)
@@ -73,7 +73,7 @@ class OctoPrintLcd1604(octoprint.plugin.StartupPlugin,
             remaining = str(datetime.timedelta(seconds=remaining))
 
             if len(remaining) > 0:
-                lcd.cursor_pos = (1, self.cols - len(remaining))
+                lcd.cursor_pos = (1, (self.cols - len(remaining)))
                 lcd.write_string(remaining)
 
     def get_update_information(self):
