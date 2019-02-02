@@ -37,12 +37,21 @@ class OctoPrintLcd1604(octoprint.plugin.StartupPlugin,
         self._logger.info("plugin initialized!")
 
     def on_print_progress(self, storage, path, progress):
+        
         lcd = self.lcd
+
         cols = self.cols
         rows = self.rows
 
         self._logger.info("cols: " + str(cols))
         self._logger.info("rows: " + str(rows))
+
+        if progress == 0:
+            self.start_date = time.time()
+            self.start_time = time.strftime("%H:%M:%S")
+
+        self._logger.info("start date: " + str(self.start_date))
+        self._logger.info("start time: " + self.start_time)
 
         # percent completed
         str_progress = str(str(progress)+'%')
@@ -57,27 +66,37 @@ class OctoPrintLcd1604(octoprint.plugin.StartupPlugin,
         lcd.cursor_pos = (0, int(cols - len(str_progress)))
         lcd.write_string(str_progress)
 
-        # estimated time
-        lcd.cursor_pos = (1, 0)
-        lcd.write_string('ETA:')
+        # duration
+        duration = time.time() - self.start_date
+        duration = str(datetime.timedelta(seconds=duration))
 
-        if progress == 1:
-            self.start_date = time.time()
+        self._logger.info("duration: " + duration)
+        self._logger.info("len(duration): " + str(len(duration)))
+        self._logger.info("int(cols - len(duration)): " + str(int(cols - len(duration))))
+
+        lcd.cursor_pos = (1, 0)
+        lcd.write_string('Duration:')
+
+        lcd.cursor_pos = (1, int(cols - len(duration)))
+        lcd.write_string(duration)
+
+        # estimate
+        lcd.cursor_pos = (2, 0)
+        lcd.write_string('Estimate:')
 
         if progress > 5 and progress < 100:
-            now = time.time()
-            elapsed = now - self.start_date
+            elapsed = time.time() - self.start_date
             average = elapsed / (progress - 1)
             remaining = int((100 - progress) * average)
             remaining = str(datetime.timedelta(seconds=remaining))
         else:
-            remaining = 'calculating...'
+            remaining = str(datetime.timedelta(seconds=0))
 
         self._logger.info("remaining: " + remaining)
         self._logger.info("len(remaining): " + str(len(remaining)))
         self._logger.info("int(cols - len(remaining)): " + str(int(cols - len(remaining))))
 
-        lcd.cursor_pos = (1, int(cols - len(remaining)))
+        lcd.cursor_pos = (2, int(cols - len(remaining)))
         lcd.write_string(remaining)
 
         # progress bar
