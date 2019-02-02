@@ -67,7 +67,7 @@ class OctoPrintLcd1604(octoprint.plugin.StartupPlugin,
         lcd.write_string(str_progress)
 
         # duration
-        duration = time.time() - self.start_date
+        duration = int(time.time() - self.start_date)
         duration = str(datetime.timedelta(seconds=duration))
 
         self._logger.info("duration: " + duration)
