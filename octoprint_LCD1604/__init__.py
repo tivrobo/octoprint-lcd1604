@@ -41,7 +41,7 @@ class OctoPrintLcd1604(octoprint.plugin.StartupPlugin,
 
         lcd.write_string('Completed: ' + str(progress) + '%\r\n')
 
-        percent = int(progress/6.25)+1
+        percent = int(progress / 5) + 1
         completed = '\x01' * percent
         # lcd.cursor_pos = (1, 0)
         lcd.write_string(completed + '\r\n')
