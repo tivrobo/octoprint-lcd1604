@@ -35,29 +35,28 @@ class OctoPrintLcd1604(octoprint.plugin.StartupPlugin,
     def on_print_progress(self, storage, path, progress):
         lcd = self.lcd
 
-        percent = int(progress/6.25)+1
-        completed = '\x01'*percent
-
         # reset lcd
         lcd.clear()
 
-        lcd.cursor_pos = (0, 0)
-        lcd.write_string('Completed: ' + str(progress) + '%')
-
         lcd.cursor_pos = (1, 0)
-        lcd.write_string(completed)
+        lcd.write_string('Completed: ' + str(progress) + '%\r\n')
+
+        percent = int(progress/6.25)+1
+        completed = '\x01' * percent
+        lcd.cursor_pos = (2, 0)
+        lcd.write_string(completed + '\r\n')
 
         if progress == 1:
             self.start_date = time.time()
 
-        lcd.cursor_pos = (2, 0)
         if progress > 1 and progress < 100:
             now = time.time()
             elapsed = now - self.start_date
             average = elapsed / (progress - 1)
             remaining = int((100 - progress) * average)
             remaining = str(datetime.timedelta(seconds=remaining))
-            lcd.write_string('ETA: ' + remaining)
+            lcd.cursor_pos = (3, 0)
+            lcd.write_string('ETA: ' + remaining + '\r\n')
 
     def get_update_information(self):
         return dict(
