@@ -44,7 +44,7 @@ class OctoPrintLcd1604(octoprint.plugin.StartupPlugin,
         # lcd.clear()
 
         str_completed = 'Completed:'
-        str_progress = str(progress + '%')
+        str_progress = str(str(progress) + '%')
 
         lcd.cursor_pos = (0, 0)
         lcd.write_string(str_completed)
