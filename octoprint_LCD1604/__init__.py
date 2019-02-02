@@ -20,6 +20,10 @@ class OctoPrintLcd1604(octoprint.plugin.StartupPlugin,
                            auto_linebreaks=False,
                            backlight_enabled=True)
 
+        self.lcd.cursor_pos = (4, 0)
+        self.lcd.write_string('C: ' + str(self.lcd.__getattribute__('cols')))
+        self.lcd.write_string('R: ' + str(self.lcd.__getattribute__('rows')))
+
         # init vars
         self.start_date = 0
         self.block = bytearray(b'\xFF\xFF\xFF\xFF\xFF\xFF\xFF')
