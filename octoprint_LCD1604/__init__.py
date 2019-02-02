@@ -14,37 +14,38 @@ class OctoPrintLcd1604(octoprint.plugin.StartupPlugin,
 
     def __init__(self):
 
-        # init lcd
+        # init vars
+        self.start_date = 0
+
+        self.block = bytearray(b'\xFF\xFF\xFF\xFF\xFF\xFF\xFF').append(255)
+        self.block.append(255)
 
         self.cols = 20
         self.rows = 4
 
+        # init lcd
         self.lcd = CharLCD(i2c_expander='PCF8574', address=0x27, port=1,
                            cols=self.cols, rows=self.rows, dotsize=8,
                            charmap='A00',
                            auto_linebreaks=False,
                            backlight_enabled=True)
 
-        # init vars
-        self.start_date = 0
-        self.block = bytearray(b'\xFF\xFF\xFF\xFF\xFF\xFF\xFF')
-        self.block.append(255)
-
         # create block for progress bar
         self.lcd.create_char(1, self.block)
 
     def on_after_startup(self):
-        lcd = self.lcd
         self._logger.info("plugin initialized !")
 
     def on_print_progress(self, storage, path, progress):
         lcd = self.lcd
+        cols = self.cols
+        rows = self.rows
 
         # percent completed
         str_progress = str(str(progress)+'%')
         lcd.cursor_pos = (0, 0)
         lcd.write_string('Completed:')
-        lcd.cursor_pos = (0, int(self.cols-len(str_progress)))
+        lcd.cursor_pos = (0, int(cols - len(str_progress)))
         lcd.write_string(str_progress)
 
         # estimated time
@@ -58,9 +59,9 @@ class OctoPrintLcd1604(octoprint.plugin.StartupPlugin,
             average = elapsed / (progress - 1)
             remaining = int((100 - progress) * average)
             remaining = str(datetime.timedelta(seconds=remaining))
-            lcd.cursor_pos = (1, int(self.cols - len(remaining)))
+            lcd.cursor_pos = (1, int(cols - len(remaining)))
             lcd.write_string(remaining)
-        
+
         # progress bar
         percent = int(progress/5) + 1
         completed = '\x01' * percent
