@@ -34,7 +34,9 @@ class OctoPrintLcd1604(octoprint.plugin.StartupPlugin,
         self.lcd.create_char(1, self.block)
 
     def on_after_startup(self):
+        lcd = self.lcd
         self._logger.info("plugin initialized!")
+
 
     def on_print_progress(self, storage, path, progress):
         
@@ -82,7 +84,7 @@ class OctoPrintLcd1604(octoprint.plugin.StartupPlugin,
         lcd.write_string(remaining)
 
         # progress bar
-        percent = int(progress / (99 / cols))
+        percent = int(progress / (101 / cols))
         completed = '\x01' * percent
 
         lcd.cursor_pos = (3, 0)
