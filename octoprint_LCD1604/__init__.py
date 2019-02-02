@@ -17,7 +17,7 @@ class OctoPrintLcd1604(octoprint.plugin.StartupPlugin,
         self.lcd = CharLCD(i2c_expander='PCF8574', address=0x27, port=1,
                            cols=16, rows=4, dotsize=8,
                            charmap='A00',
-                           auto_linebreaks=True,
+                           auto_linebreaks=False,
                            backlight_enabled=True)
 
         # init vars
