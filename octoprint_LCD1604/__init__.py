@@ -13,9 +13,14 @@ class OctoPrintLcd1604(octoprint.plugin.StartupPlugin,
                        octoprint.plugin.ProgressPlugin):
 
     def __init__(self):
+
         # init lcd
+
+        self.cols = 20
+        self.rows = 4
+
         self.lcd = CharLCD(i2c_expander='PCF8574', address=0x27, port=1,
-                           cols=20, rows=4, dotsize=8,
+                           cols=self.cols, rows=self.rows, dotsize=8,
                            charmap='A00',
                            auto_linebreaks=False,
                            backlight_enabled=True)
@@ -36,13 +41,23 @@ class OctoPrintLcd1604(octoprint.plugin.StartupPlugin,
         lcd = self.lcd
 
         # reset lcd
-        lcd.clear()
-        
+        # lcd.clear()
+
+        str_completed = 'Completed:'
+        str_progress = str(progress) + '%'
+
         lcd.cursor_pos = (0, 0)
-        lcd.write_string('Completed: ' + str(progress) + '%')
+        lcd.write_string(str_completed)
+
+        lcd.cursor_pos = (0, self.cols - str_progress.__len__)
+        lcd.write_string(str_progress)
+
+        lcd.cursor_pos = (1, 0)
+        lcd.write_string('ETA:')
 
         percent = int(progress / 5) + 1
         completed = '\x01' * percent
+        
         lcd.cursor_pos = (3, 0)
         lcd.write_string(completed)
 
@@ -55,8 +70,8 @@ class OctoPrintLcd1604(octoprint.plugin.StartupPlugin,
             average = elapsed / (progress - 1)
             remaining = int((100 - progress) * average)
             remaining = str(datetime.timedelta(seconds=remaining))
-            lcd.cursor_pos = (1, 0)
-            lcd.write_string('ETA: ' + remaining)
+            lcd.cursor_pos = (1, self.cols - remaining.__len__)
+            lcd.write_string(remaining)
 
     def get_update_information(self):
         return dict(
@@ -71,7 +86,9 @@ class OctoPrintLcd1604(octoprint.plugin.StartupPlugin,
             )
         )
 
+
 __plugin_name__ = "OctoPrint LCD1604"
+
 
 def __plugin_load__():
     global __plugin_implementation__
