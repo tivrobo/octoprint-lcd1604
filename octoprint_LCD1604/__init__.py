@@ -27,7 +27,7 @@ class OctoPrintLcd1604(octoprint.plugin.StartupPlugin,
         self.lcd = CharLCD(i2c_expander='PCF8574', address=0x27, port=1,
                            cols=self.cols, rows=self.rows, dotsize=8,
                            charmap='A00',
-                           auto_linebreaks=False,
+                           auto_linebreaks=True,
                            backlight_enabled=True)
 
         # create block for progress bar
