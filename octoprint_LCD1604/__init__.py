@@ -35,12 +35,14 @@ class OctoPrintLcd1604(octoprint.plugin.StartupPlugin,
 
     def on_after_startup(self):
         lcd = self.lcd
+        lcd.clear()
         self._logger.info("plugin initialized!")
 
 
     def on_print_progress(self, storage, path, progress):
         
         lcd = self.lcd
+        lcd.clear()
 
         cols = self.cols
         rows = self.rows
